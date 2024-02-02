@@ -6,6 +6,7 @@ import logging
 import math
 import matplotlib.pyplot as plt
 import sys
+from datetime import datetime
 
 # Configure logging
 logging.basicConfig(filename='pyomo_ipy.log', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -15,12 +16,31 @@ def distance(location1, location2):
     y_diff = location1[1] - location2[1]
     return math.sqrt(x_diff**2 + y_diff**2)
 
-def time_limit(cus_time_limit):
-    cus_time_limit = cus_time_limit
-    return cus_time_limit
+def time_limit(customer_limits, customer_id):
+    # Get the current time
+    current_time = datetime.now().time()
+
+    # Check if the customer ID is in the dictionary
+    if customer_id in customer_limits:
+        # Set the allowed time limit for the customer
+        allowed_time = datetime.strptime(customer_limits[customer_id], '%I %p').time()
+
+        # Check if the current time is within the allowed time limit
+        if current_time <= allowed_time:
+            return True  # Customer is allowed
+        else:
+            return False  # Customer is not allowed
+    else:
+        return False  # Customer ID not found in the dictionary
+
+# Example usage:
+num_customers = 10  # Change this to the desired number of customers
+customer_limits = {f"customer{i}": f"{random.randint(1, 12)} AM" for i in range(1, num_customers + 1)}  # Generate time limits for each customer
+
+def vehicle_cal(vehicles):
+    return len(vehicles)
 
 def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
-    
     try:
         # Generate random data
         customers = range(1, num_customers + 1)
@@ -37,6 +57,10 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
         random.shuffle(unique_goods_values)
 
         goods_for_cus = {i: unique_goods_values[j % num_goods] for j, i in enumerate(customers)}
+
+        # Generate time limits for each customer
+        customer_limits = {f"customer{i}": f"{random.randint(1, 12)} AM" for i in range(1, num_customers + 1)}
+
         # Calculate distances between locations
         distances = {(i, j, k): distance(customer_locations[i], customer_locations[j]) for i in customers for j in customers for k in vehicles if i != j}
 
@@ -66,15 +90,8 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
         for k in vehicles:
             model.depot_constraint.add(expr=sum(model.x[i, j, k] for j in customers for k in vehicles) == 1)
         
-        # Ensure that each vehicle must visit at least one customer
-        # model.at_least_one_customer_constraint = pyomo.ConstraintList()
-        # for k in vehicles:
-        #     model.at_least_one_customer_constraint.add(
-        #         expr=sum(model.x[i, j, k] for i in customers for j in customers) >= 1
-        #     )
-        
         # Ensure that each vehicle's goods capacity is not exceeded
-        vehicle_capacity = 10 # Example capacity, adjust as needed
+        vehicle_capacity = 10  # Example capacity, adjust as needed
         model.capacity_constraint = pyomo.ConstraintList()
         for k in vehicles:
             model.capacity_constraint.add(
@@ -89,7 +106,7 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
         print("\nRESULTS\n")
 
         print("Total distance traveled:", sum(distances[i, j, k] + pyomo.value(model.x[i, j, k]) for i in customers for j in customers for k in vehicles if i != j))
-        print("goods: ",goods_for_cus)
+        print("goods: ", goods_for_cus)
         if results.solver.termination_condition == pyomo.TerminationCondition.optimal:
             # Display the routes
             routes = []
@@ -121,8 +138,8 @@ def plot_routes(routes, depot, customer_locations):
         plt.text(x, y, f"ID_{customer}", fontsize=8, ha='right')
 
     # Define colors for different vehicles
-    # more colors
     colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'brown', 'pink', 'gray', 'cyan', 'magenta', 'black']
+
     # Plot routes
     for k, route in enumerate(routes):
         color = colors[k % len(colors)]  # Cycle through colors for each vehicle
@@ -147,8 +164,8 @@ if __name__ == "__main__":
     if len(sys.argv) != 4:
         sys.exit(1)
 
-    num_customers = int(sys.argv[1]) #60-100
-    num_vehicles = int(sys.argv[2]) # 3-10
-    num_goods = int(sys.argv[3]) # 60-100
+    num_customers = int(sys.argv[1])  # 60-100
+    num_vehicles = int(sys.argv[2])  # 3-10
+    num_goods = int(sys.argv[3])  # 60-100
 
     solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods)

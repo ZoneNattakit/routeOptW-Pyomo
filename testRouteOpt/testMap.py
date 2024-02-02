@@ -1,5 +1,5 @@
+import googlemaps 
 import requests
-
 def get_weather(city):
     api_url = f'http://api.openweathermap.org/data/2.5/find?q={city}'
     
@@ -20,7 +20,7 @@ def get_weather(city):
         print(f'Error during API request: {e}')
 
 # Specify the city you're interested in
-city_to_check = 'Bangkok'  # Replace with the city you're interested in
+city_to_check = 'London'  # Replace with the city you're interested in
 
 # Fetch and print weather information
 get_weather(city_to_check)
