@@ -5,6 +5,7 @@ import random
 import logging
 import math
 import matplotlib.pyplot as plt
+import json
 import sys
 
 # Configure logging
@@ -19,8 +20,7 @@ def time_limit(cus_time_limit):
     cus_time_limit = cus_time_limit
     return cus_time_limit
 
-def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
-    
+def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_windows):
     try:
         # Generate random data
         customers = range(1, num_customers + 1)
@@ -46,6 +46,7 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
         # Decision Variables
         model.x = pyomo.Var(customers, customers, vehicles, domain=pyomo.Binary)
         model.goods = pyomo.Var(customers, vehicles, domain=pyomo.NonNegativeReals)  # New variable for goods carried
+        model.arrival_time = pyomo.Var(customers, vehicles, domain=pyomo.NonNegativeReals)
 
         # Objective function: Minimize total distance traveled and total goods carried
         model.obj = pyomo.Objective(
@@ -67,12 +68,34 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
             model.depot_constraint.add(expr=sum(model.x[i, j, k] for j in customers for k in vehicles) == 1)
         
         # Ensure that each vehicle's goods capacity is not exceeded
-        vehicle_capacity = 10 # Example capacity, adjust as needed
+        vehicle_capacity = 10  # Example capacity, adjust as needed
         model.capacity_constraint = pyomo.ConstraintList()
         for k in vehicles:
             model.capacity_constraint.add(
                 expr=sum(goods_for_cus[i] * model.goods[i, k] for i in customers) <= vehicle_capacity
             )
+
+        # Time window constraints
+        model.time_window_constraint = pyomo.ConstraintList()
+        for i in customers:
+            start_time, end_time = time_windows.get(i, (0, 0))  # Default to (0, 0) if time window is not provided
+            for k in vehicles:
+                model.time_window_constraint.add(
+                    model.arrival_time[i, k] >= start_time
+                )
+                model.time_window_constraint.add(
+                    model.arrival_time[i, k] <= end_time
+                )
+
+        # Arrival time constraints
+        M = 10000  # A large constant to represent infinity
+        for i in customers:
+            for j in customers:
+                for k in vehicles:
+                    if i != j:
+                        model.time_constraint = pyomo.Constraint(
+                            expr=model.arrival_time[i, k] + distances[i, j, k] <= model.arrival_time[j, k] + M * (1 - model.x[i, j, k])
+                        )
 
         # Solve the VRP problem
         solver = SolverFactory('cbc')
@@ -82,7 +105,7 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
         print("\nRESULTS\n")
 
         print("Total distance traveled:", sum(distances[i, j, k] + pyomo.value(model.x[i, j, k]) for i in customers for j in customers for k in vehicles if i != j))
-        print("goods: ",goods_for_cus)
+        print("Goods: ", goods_for_cus)
         if results.solver.termination_condition == pyomo.TerminationCondition.optimal:
             # Display the routes
             routes = []
@@ -90,7 +113,6 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
                 route = [(i, j) for i in customers for j in customers if pyomo.value(model.x[i, j, k])]
                 routes.append(route)
                 print(f"Vehicle {k + 1} route: {[customer_names[i] for i, j in route]}")
-                # print("goods: ",goods_for_cus)
 
             # Plot the routes
             plot_routes(routes, depot, customer_locations)
@@ -102,20 +124,23 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods):
         logging.error("An error occurred: %s", str(e))
 
 # Plot routes
-def plot_routes(routes, depot, customer_locations):
+def plot_routes(routes, depot, customer_locations, time_windows):
     plt.figure(figsize=(12, 12))
+    
+    print(depot)
 
     # Plot depot
     plt.scatter(*depot, color='black', marker='D', s=100, label='Depot')
 
-    # Plot customer nodes
+    # Plot customer nodes with additional information
     for customer, (x, y) in customer_locations.items():
         plt.scatter(x, y, color='blue')
-        plt.text(x, y, f"ID_{customer}", fontsize=8, ha='right')
+        plt.text(x, y, f"ID_{customer}\n{time_windows[customer][0]:.2f}-{time_windows[customer][1]:02d} to {time_windows[customer][2]:.2f}-{time_windows[customer][3]:02d}", fontsize=8, ha='right')
 
     # Define colors for different vehicles
-    # more colors
-    colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'brown', 'pink', 'gray', 'cyan', 'magenta', 'black']
+    colors = ['red', 'orange', 'yellow', 'green',
+              'blue', 'purple', 'brown', 'pink', 'gray', 'cyan', 'magenta', 'black']
+
     # Plot routes
     for k, route in enumerate(routes):
         color = colors[k % len(colors)]  # Cycle through colors for each vehicle
@@ -125,7 +150,6 @@ def plot_routes(routes, depot, customer_locations):
         y_values = [depot[1]] + [customer_locations[i][1] for i, j in route] + [depot[1]]
 
         plt.plot(x_values, y_values, color=color, marker='o')
-        # plt.plot([], [], color=color, label=f'Vehicle {k + 1} route')
         plt.plot([], [], color=color, marker='o', label=f'Vehicle {k + 1}')
 
     # Add legend outside the plot
@@ -138,11 +162,39 @@ def plot_routes(routes, depot, customer_locations):
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
+        print(len(sys.argv))
+        print("Usage: python script.py num_customers num_vehicles num_goods")
         sys.exit(1)
 
-    num_customers = int(sys.argv[1]) #60-100
-    num_vehicles = int(sys.argv[2]) # 3-10
-    num_goods = int(sys.argv[3]) # 60-100
+    num_customers = int(sys.argv[1])
+    num_vehicles = int(sys.argv[2])
+    num_goods = int(sys.argv[3])
 
-    solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods)
-    
+    time_windows = {}
+    for i in range(1, num_customers + 1):
+        start_hour = int(input(f"Enter start hour for customer {i}: "))
+        start_min = int(input(f"Enter start minute for customer {i}: "))
+        
+        end_hour = int(input(f"Enter end hour for customer {i}: "))
+        end_min = int(input(f"Enter end minute for customer {i}: "))
+        time_windows[i] = (start_hour, start_min, end_hour, end_min)
+        if start_hour and start_hour > 24 and start_min and end_min > 60:
+            print("Start time and end time should be between 0 and 24 and minute between 0 and 60")
+            sys.exit(1)
+
+    input_data = {
+        "num_customers": num_customers,
+        "num_vehicles": num_vehicles,
+        "num_goods": num_goods,
+        "time_windows": time_windows
+    }
+
+    with open('customers.log', 'a') as json_file: #it check if customers.json already have data
+    # Use json.dump to write the data to the file
+        json.dump(input_data, json_file)
+        
+        # Add a newline character to separate the appended data
+        json_file.write('\n')
+
+    solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_windows)
+    plot_routes(num_customers, num_vehicles, num_goods, time_windows)

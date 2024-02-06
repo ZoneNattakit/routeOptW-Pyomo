@@ -1,1 +1,13 @@
-
+2024-02-06 14:47:31,995 - ERROR - An error occurred: object of type 'int' has no len()
+2024-02-06 15:43:56,916 - ERROR - evaluating object as numeric value: x[1,2,0]
+    (object: <class 'pyomo.core.base.var._GeneralVarData'>)
+No value for uninitialized NumericValue object x[1,2,0]
+2024-02-06 15:43:56,917 - ERROR - An error occurred: No value for uninitialized NumericValue object x[1,2,0]
+2024-02-06 16:03:24,063 - ERROR - An error occurred: too many values to unpack (expected 2)
+2024-02-06 16:09:58,362 - ERROR - An error occurred: too many values to unpack (expected 2)
+2024-02-06 16:11:56,946 - ERROR - An error occurred: too many values to unpack (expected 2)
+2024-02-06 17:19:02,535 - ERROR - An error occurred: too many values to unpack (expected 2)
+2024-02-06 17:21:08,244 - ERROR - An error occurred: too many values to unpack (expected 2)
+2024-02-06 17:22:43,747 - ERROR - An error occurred: too many values to unpack (expected 2)
+2024-02-06 17:30:11,436 - ERROR - An error occurred: too many values to unpack (expected 2)
+2024-02-06 17:30:44,168 - ERROR - An error occurred: too many values to unpack (expected 2)

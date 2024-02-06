@@ -6,11 +6,19 @@
 
 
 #condition
-- goods and customer amount 60-100 > testing not good but in customer's condition 
-- former send before >> ???
-- add time limit for each customer > waiting
-- check and cal vehicles > ???
-- wait map api >! wait 
+- goods and customer amount 60-100 > testing not good but in customer's condition (test 5 customers)
+- former send before > not good but work
+- add time limit for each customer >> checked
+- make good format > in process
+- check and cal vehicles > in process (make function)
+- wait map api >! wait (Longdo map)
 
 password
 @Dmin1234
+
+# Ensure that each vehicle must visit at least one customer
+        # model.at_least_one_customer_constraint = pyomo.ConstraintList()
+        # for k in vehicles:
+        #     model.at_least_one_customer_constraint.add(
+        #         expr=sum(model.x[i, j, k] for i in customers for j in customers) >= 1
+        #     )
