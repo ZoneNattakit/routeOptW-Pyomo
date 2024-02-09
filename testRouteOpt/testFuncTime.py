@@ -6,19 +6,20 @@ import logging
 import math
 import matplotlib.pyplot as plt
 import json
+from datetime import datetime
 import sys
 
 # Configure logging
 logging.basicConfig(filename='pyomo_ipy.log', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
+#go to log
 def distance(location1, location2):
     x_diff = location1[0] - location2[0]
     y_diff = location1[1] - location2[1]
     return math.sqrt(x_diff**2 + y_diff**2)
 
-def time_limit(cus_time_limit):
-    cus_time_limit = cus_time_limit
-    return cus_time_limit
+def create_datetime(year, month, day, hour, minute):
+    return datetime(year, month, day, hour, minute)
 
 def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_windows):
     try:
@@ -78,13 +79,15 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_w
         # Time window constraints
         model.time_window_constraint = pyomo.ConstraintList()
         for i in customers:
-            start_time, end_time = time_windows.get(i, (0, 0))  # Default to (0, 0) if time window is not provided
+            start_time = time_windows.get(i, {'start': {'hour': datetime.now().hour, 'minute': datetime.now().minute}})['start']
+            print("start time type", type(start_time))
+            end_time = time_windows.get(i, {'end': {'hour': datetime.now().hour, 'minute': datetime.now().minute}})['end']
             for k in vehicles:
                 model.time_window_constraint.add(
-                    model.arrival_time[i, k] >= start_time
+                    model.arrival_time[i, k] >= start_time['hour'] * 60 + start_time['minute']
                 )
                 model.time_window_constraint.add(
-                    model.arrival_time[i, k] <= end_time
+                    model.arrival_time[i, k] <= end_time['hour'] * 60 + end_time['minute']
                 )
 
         # Arrival time constraints
@@ -106,6 +109,7 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_w
 
         print("Total distance traveled:", sum(distances[i, j, k] + pyomo.value(model.x[i, j, k]) for i in customers for j in customers for k in vehicles if i != j))
         print("Goods: ", goods_for_cus)
+        
         if results.solver.termination_condition == pyomo.TerminationCondition.optimal:
             # Display the routes
             routes = []
@@ -124,23 +128,20 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_w
         logging.error("An error occurred: %s", str(e))
 
 # Plot routes
-def plot_routes(routes, depot, customer_locations, time_windows):
+def plot_routes(routes, depot, customer_locations):
     plt.figure(figsize=(12, 12))
-    
-    print(depot)
 
     # Plot depot
     plt.scatter(*depot, color='black', marker='D', s=100, label='Depot')
 
-    # Plot customer nodes with additional information
+    # Plot customer nodes
     for customer, (x, y) in customer_locations.items():
         plt.scatter(x, y, color='blue')
-        plt.text(x, y, f"ID_{customer}\n{time_windows[customer][0]:.2f}-{time_windows[customer][1]:02d} to {time_windows[customer][2]:.2f}-{time_windows[customer][3]:02d}", fontsize=8, ha='right')
+        plt.text(x, y, f"ID_{customer}", fontsize=8, ha='right')
 
     # Define colors for different vehicles
-    colors = ['red', 'orange', 'yellow', 'green',
-              'blue', 'purple', 'brown', 'pink', 'gray', 'cyan', 'magenta', 'black']
-
+    # more colors
+    colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'brown', 'pink', 'gray', 'cyan', 'magenta', 'black']
     # Plot routes
     for k, route in enumerate(routes):
         color = colors[k % len(colors)]  # Cycle through colors for each vehicle
@@ -150,6 +151,7 @@ def plot_routes(routes, depot, customer_locations, time_windows):
         y_values = [depot[1]] + [customer_locations[i][1] for i, j in route] + [depot[1]]
 
         plt.plot(x_values, y_values, color=color, marker='o')
+        # plt.plot([], [], color=color, label=f'Vehicle {k + 1} route')
         plt.plot([], [], color=color, marker='o', label=f'Vehicle {k + 1}')
 
     # Add legend outside the plot
@@ -172,27 +174,35 @@ if __name__ == "__main__":
 
     time_windows = {}
     for i in range(1, num_customers + 1):
-        start_hour = int(input(f"Enter start hour for customer {i}: "))
-        start_min = int(input(f"Enter start minute for customer {i}: "))
-        
-        end_hour = int(input(f"Enter end hour for customer {i}: "))
-        end_min = int(input(f"Enter end minute for customer {i}: "))
-        time_windows[i] = (start_hour, start_min, end_hour, end_min)
-        if start_hour and start_hour > 24 and start_min and end_min > 60:
-            print("Start time and end time should be between 0 and 24 and minute between 0 and 60")
+        try:
+            start_time_str = input(f"Enter start time (HH:MM) for customer {i}: ")
+            end_time_str = input(f"Enter end time (HH:MM) for customer {i}: ")
+
+            start_time = datetime.strptime(start_time_str, "%H:%M")
+            end_time = datetime.strptime(end_time_str, "%H:%M")
+
+            # Store the time windows in the dictionary
+            time_windows[i] = {
+                'customer_ID': i,
+                'start_at': {start_time.hour: start_time.minute},
+                'end_at': {end_time.hour: end_time.minute}
+            }
+
+        except ValueError:
+            print("Invalid time input. Use the format HH:MM.")
             sys.exit(1)
 
     input_data = {
         "num_customers": num_customers,
         "num_vehicles": num_vehicles,
         "num_goods": num_goods,
-        "time_windows": time_windows
+        "time_for_sent": time_windows
     }
 
-    with open('customers.log', 'a') as json_file: #it check if customers.json already have data
-    # Use json.dump to write the data to the file
+    with open('customers.log', 'a') as json_file:
+        # Use json.dump to write the data to the file
         json.dump(input_data, json_file)
-        
+
         # Add a newline character to separate the appended data
         json_file.write('\n')
 

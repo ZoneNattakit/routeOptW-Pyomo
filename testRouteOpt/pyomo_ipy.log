@@ -11,3 +11,19 @@ No value for uninitialized NumericValue object x[1,2,0]
 2024-02-06 17:22:43,747 - ERROR - An error occurred: too many values to unpack (expected 2)
 2024-02-06 17:30:11,436 - ERROR - An error occurred: too many values to unpack (expected 2)
 2024-02-06 17:30:44,168 - ERROR - An error occurred: too many values to unpack (expected 2)
+2024-02-08 09:16:57,668 - ERROR - An error occurred: plot_routes() missing 1 required positional argument: 'time_windows'
+2024-02-08 09:21:17,640 - ERROR - An error occurred: plot_routes() missing 1 required positional argument: 'time_windows'
+2024-02-08 09:32:44,904 - ERROR - An error occurred: plot_routes() missing 1 required positional argument: 'time_windows'
+2024-02-08 09:33:31,754 - ERROR - An error occurred: plot_routes() missing 1 required positional argument: 'time_windows'
+2024-02-08 09:49:19,584 - ERROR - An error occurred: plot_routes() missing 1 required positional argument: 'time_windows'
+2024-02-08 09:50:13,235 - ERROR - An error occurred: plot_routes() missing 1 required positional argument: 'time_windows'
+2024-02-08 09:50:53,530 - ERROR - An error occurred: 'CBCSHELL' object has no attribute 'termination_condition'
+2024-02-08 09:51:33,632 - ERROR - An error occurred: plot_routes() missing 1 required positional argument: 'time_windows'
+2024-02-08 09:54:10,481 - ERROR - An error occurred: plot_routes() missing 1 required positional argument: 'time_windows'
+2024-02-08 10:50:00,575 - ERROR - An error occurred: 'str' object has no attribute 'is_component_type'
+2024-02-08 10:50:33,394 - ERROR - An error occurred: 'str' object has no attribute 'is_component_type'
+2024-02-08 10:50:45,503 - ERROR - An error occurred: 'str' object has no attribute 'is_component_type'
+2024-02-08 11:08:52,672 - ERROR - An error occurred: 'str' object has no attribute 'is_component_type'
+2024-02-08 14:23:05,311 - ERROR - An error occurred: 'start'
+2024-02-08 14:30:17,706 - ERROR - An error occurred: 'start'
+2024-02-08 14:30:45,631 - ERROR - An error occurred: 'start'

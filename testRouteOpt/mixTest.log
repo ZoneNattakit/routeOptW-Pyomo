@@ -1,0 +1,37 @@
+2024-02-08 14:53:26,579 - INFO - Successful
+2024-02-08 14:53:26,580 - DEBUG - Constructing ConcreteModel 'ConcreteModel', from data=None
+2024-02-08 14:53:26,580 - DEBUG - Constructing Set, name=OrderedScalarSet, from data=None
+2024-02-08 14:53:26,580 - DEBUG - Constructing IndexedVar 'x' on [Model] from data=None
+2024-02-08 14:53:26,580 - DEBUG - Constructing Variable x
+2024-02-08 14:53:26,581 - DEBUG - Constructed component ''[Model].x'':
+x : Size=5, Index=x_index
+    Key           : Lower : Value : Upper : Fixed : Stale : Domain
+    ('A', 'B', 1) :     0 :  None :     1 : False :  True : Binary
+    ('A', 'C', 4) :     0 :  None :     1 : False :  True : Binary
+    ('B', 'C', 2) :     0 :  None :     1 : False :  True : Binary
+    ('B', 'D', 5) :     0 :  None :     1 : False :  True : Binary
+    ('C', 'D', 1) :     0 :  None :     1 : False :  True : Binary
+
+2024-02-08 14:53:26,582 - DEBUG - Constructing ScalarObjective 'obj' on [Model] from data=None
+2024-02-08 14:53:26,582 - DEBUG - Constructing objective obj
+2024-02-08 14:53:26,582 - DEBUG - Constructed component ''[Model].obj'':
+obj : Size=1, Index=None, Active=True
+    Key  : Active : Sense    : Expression
+    None :   True : minimize : x[A,B,1] + 4*x[A,C,4] + 2*x[B,C,2] + 5*x[B,D,5] + x[C,D,1]
+
+2024-02-08 14:53:26,582 - DEBUG - Constructing AbstractOrderedScalarSet 'constraints_index' on [Model] from data=None
+2024-02-08 14:53:26,582 - DEBUG - Constructing Set, name=constraints_index, from data=None
+2024-02-08 14:53:26,583 - DEBUG - Constructed component ''[Model].constraints_index'':
+constraints_index : Size=1, Index=None, Ordered=Insertion
+    Key  : Dimen : Domain : Size : Members
+    None :     1 :    Any :    0 :      {}
+
+2024-02-08 14:53:26,583 - DEBUG - Constructing ConstraintList 'constraints' on [Model] from data=None
+2024-02-08 14:53:26,583 - DEBUG - Constructing constraint list constraints
+2024-02-08 14:53:26,583 - DEBUG - Constructed component ''[Model].constraints'':
+constraints : Size=0, Index=constraints_index, Active=True
+    Key : Lower : Body : Upper : Active
+
+2024-02-08 14:53:26,589 - DEBUG - Constructing Variable ONE_VAR_CONSTANT
+2024-02-08 14:53:26,590 - DEBUG - Writing model 'unknown' to file 'C:\Users\Nattakit\AppData\Local\Temp\tmp6ke275pm.pyomo.lp' with format cpxlp
+2024-02-08 14:53:26,592 - DEBUG - Running ['C:\\Users\\Nattakit\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\cbc.exe', '-printingOptions', 'all', '-import', 'C:\\Users\\Nattakit\\AppData\\Local\\Temp\\tmp6ke275pm.pyomo.lp', '-stat=1', '-solve', '-solu', 'C:\\Users\\Nattakit\\AppData\\Local\\Temp\\tmp6ke275pm.pyomo.soln']

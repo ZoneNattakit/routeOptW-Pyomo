@@ -9,16 +9,15 @@
 - goods and customer amount 60-100 > testing not good but in customer's condition (test 5 customers)
 - former send before > not good but work
 - add time limit for each customer >> checked
-- make good format > in process
+- make good format >> in process
 - check and cal vehicles > in process (make function)
-- wait map api >! wait (Longdo map)
+- wait map api >! wait openstreet map read
+- use datetime module instead >> checked
+
+
+- transfer all intern in 20 feb
+- push takumi in server (W/P'Mac)
+- find clone git to other git (find out)
 
 password
 @Dmin1234
-
-# Ensure that each vehicle must visit at least one customer
-        # model.at_least_one_customer_constraint = pyomo.ConstraintList()
-        # for k in vehicles:
-        #     model.at_least_one_customer_constraint.add(
-        #         expr=sum(model.x[i, j, k] for i in customers for j in customers) >= 1
-        #     )
