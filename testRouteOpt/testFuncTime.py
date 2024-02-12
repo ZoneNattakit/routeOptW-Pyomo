@@ -18,8 +18,8 @@ def distance(location1, location2):
     y_diff = location1[1] - location2[1]
     return math.sqrt(x_diff**2 + y_diff**2)
 
-def create_datetime(year, month, day, hour, minute):
-    return datetime(year, month, day, hour, minute)
+# def create_datetime(year, month, day, hour, minute):
+#     return datetime(year, month, day, hour, minute)
 
 def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_windows):
     try:
@@ -129,7 +129,7 @@ def solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_w
 
 # Plot routes
 def plot_routes(routes, depot, customer_locations):
-    plt.figure(figsize=(12, 12))
+    plt.figure(figsize=(10, 10))
 
     # Plot depot
     plt.scatter(*depot, color='black', marker='D', s=100, label='Depot')
@@ -138,10 +138,13 @@ def plot_routes(routes, depot, customer_locations):
     for customer, (x, y) in customer_locations.items():
         plt.scatter(x, y, color='blue')
         plt.text(x, y, f"ID_{customer}", fontsize=8, ha='right')
-
+    
     # Define colors for different vehicles
-    # more colors
-    colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'brown', 'pink', 'gray', 'cyan', 'magenta', 'black']
+    colors = ['aquamarine', 'coral', 'lime', 'salmon', 'khaki', 'orchid', 
+              'peru', 'slate', 'tomato', 'wheat', 'azure', 'bisque', 'cadetblue', 
+              'darkorchid', 'firebrick', 'goldenrod', 'limegreen', 'navajowhite',
+              'rosybrown', 'seagreen']
+
     # Plot routes
     for k, route in enumerate(routes):
         color = colors[k % len(colors)]  # Cycle through colors for each vehicle
@@ -151,10 +154,9 @@ def plot_routes(routes, depot, customer_locations):
         y_values = [depot[1]] + [customer_locations[i][1] for i, j in route] + [depot[1]]
 
         plt.plot(x_values, y_values, color=color, marker='o')
-        # plt.plot([], [], color=color, label=f'Vehicle {k + 1} route')
-        plt.plot([], [], color=color, marker='o', label=f'Vehicle {k + 1}')
-
+        plt.plot([], [], color=color, label=f'Vehicle {k + 1} route')
     # Add legend outside the plot
+    
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper right')
     plt.title('Vehicle Routes')
     plt.xlabel('X-coordinate')
@@ -175,21 +177,21 @@ if __name__ == "__main__":
     time_windows = {}
     for i in range(1, num_customers + 1):
         try:
-            start_time_str = input(f"Enter start time (HH:MM) for customer {i}: ")
-            end_time_str = input(f"Enter end time (HH:MM) for customer {i}: ")
-
-            start_time = datetime.strptime(start_time_str, "%H:%M")
-            end_time = datetime.strptime(end_time_str, "%H:%M")
+            start_hour = int(input(f"Enter start hour for customer {i}: "))
+            start_minute = int(input(f"Enter start minute for customer {i}: "))
+            
+            end_hour = int(input(f"Enter end hour for customer {i}: "))
+            end_minute = int(input(f"Enter end minute for customer {i}: "))
 
             # Store the time windows in the dictionary
             time_windows[i] = {
                 'customer_ID': i,
-                'start_at': {start_time.hour: start_time.minute},
-                'end_at': {end_time.hour: end_time.minute}
+                'start': {'hour': start_hour, 'minute': start_minute},
+                'end': {'hour': end_hour, 'minute': end_minute}
             }
 
         except ValueError:
-            print("Invalid time input. Use the format HH:MM.")
+            print("Invalid time input. Use integers for hours and minutes.")
             sys.exit(1)
 
     input_data = {
@@ -207,4 +209,4 @@ if __name__ == "__main__":
         json_file.write('\n')
 
     solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods, time_windows)
-    plot_routes(num_customers, num_vehicles, num_goods, time_windows)
+    # plot_routes(num_customers, num_vehicles, num_goods)

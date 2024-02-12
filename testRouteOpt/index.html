@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Routing WebApp</title>
+</head>
+<body>
+    <form action="/process_input" method="post">
+        <label for="num_customers">Number of Customers:</label>
+        <input type="number" name="num_customers" required><br>
+
+        <label for="num_vehicles">Number of Vehicles:</label>
+        <input type="number" name="num_vehicles" required><br>
+
+        <label for="num_goods">Number of Goods:</label>
+        <input type="number" name="num_goods" required><br>
+
+        {% for i in range(1, num_customers + 1) %}
+            <label for="start_hour_{{ i }}">Start Hour for Customer {{ i }}:</label>
+            <input type="number" name="start_hour_{{ i }}" required>
+            <label for="start_minute_{{ i }}">Start Minute for Customer {{ i }}:</label>
+            <input type="number" name="start_minute_{{ i }}" required><br>
+
+            <label for="end_hour_{{ i }}">End Hour for Customer {{ i }}:</label>
+            <input type="number" name="end_hour_{{ i }}" required>
+            <label for="end_minute_{{ i }}">End Minute for Customer {{ i }}:</label>
+            <input type="number" name="end_minute_{{ i }}" required><br>
+        {% endfor %}
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

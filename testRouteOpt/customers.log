@@ -1,7 +1,1 @@
-{"num_customers": 1, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"customer_ID": 1, "start": {"hour": 12, "minute": 0}, "end": {"hour": 14, "minute": 0}}}
-{"num_customers": 2, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"customer_ID": 2, "start": {"hour": 12, "minute": 0}, "end": {"hour": 12, "minute": 50}}}
-{"num_customers": 2, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"customer_ID": 2, "start": {"": 12, ":": 0}, "end": {"": 13, ":": 0}}}
-{"num_customers": 5, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"customer_ID": 5, "start": {"": 13, ":": 0}, "end": {"": 13, ":": 34}}}
-{"num_customers": 2, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"1": {"customer_ID": 1, "start_at": {"12": 0}, "end_at": {"13": 0}}, "2": {"customer_ID": 2, "start_at": {"12": 0}, "end_at": {"14": 0}}}}
-{"num_customers": 2, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"1": {"customer_ID": 1, "start_at": {"12": 0}, "end_at": {"13": 0}}, "2": {"customer_ID": 2, "start_at": {"12": 0}, "end_at": {"12": 59}}}}
-{"num_customers": 2, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"1": {"customer_ID": 1, "start_at": {"9": 0}, "end_at": {"12": 0}}, "2": {"customer_ID": 2, "start_at": {"9": 0}, "end_at": {"12": 3}}}}
+{"num_customers": 2, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"1": {"customer_ID": 1, "start": {"hour": 12, "minute": 0}, "end": {"hour": 13, "minute": 0}}, "2": {"customer_ID": 2, "start": {"hour": 12, "minute": 0}, "end": {"hour": 12, "minute": 45}}}}
