@@ -19,5 +19,13 @@
 - push takumi in server (W/P'Mac)
 - find clone git to other git (find out)
 
+
+- test mix folium > in process (get position from user)
+- change it to function > in process 
+
+
+
+
+
 password
 @Dmin1234

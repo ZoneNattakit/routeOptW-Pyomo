@@ -1,0 +1,79 @@
+{
+  "num_customers": 2,
+  "num_vehicles": 3,
+  "num_goods": 5,
+  "time_for_sent": {
+    "1": {
+      "start": {
+        "hour": 12,
+        "minute": 0
+      },
+      "end": {
+        "hour": 13,
+        "minute": 0
+      }
+    },
+    "2": {
+      "start": {
+        "hour": 12,
+        "minute": 0
+      },
+      "end": {
+        "hour": 12,
+        "minute": 13
+      }
+    }
+  }
+}{"num_customers": 2, "num_vehicles": 3, "num_goods": 5, "time_for_sent": {"1": {"start": {"hour": 12, "minute": 0}, "end": {"hour": 12, "minute": 13}}, "2": {"start": {"hour": 12, "minute": 0}, "end": {"hour": 12, "minute": 13}}}}{
+  "num_customers": 2,
+  "num_vehicles": 3,
+  "num_goods": 5,
+  "time_for_sent": {
+    "1": {
+      "start": {
+        "hour": 12,
+        "minute": 0
+      },
+      "end": {
+        "hour": 13,
+        "minute": 0
+      }
+    },
+    "2": {
+      "start": {
+        "hour": 12,
+        "minute": 0
+      },
+      "end": {
+        "hour": 12,
+        "minute": 45
+      }
+    }
+  }
+}{
+  "num_customers": 2,
+  "num_vehicles": 3,
+  "num_goods": 4,
+  "time_for_sent": {
+    "1": {
+      "start": {
+        "hour": 12,
+        "minute": 0
+      },
+      "end": {
+        "hour": 12,
+        "minute": 0
+      }
+    },
+    "2": {
+      "start": {
+        "hour": 12,
+        "minute": 0
+      },
+      "end": {
+        "hour": 12,
+        "minute": 0
+      }
+    }
+  }
+}
