@@ -227,7 +227,7 @@ if __name__ == "__main__":
     # depot, customer_locations, goods_for_cus, distances = generate_random_data(num_customers, num_vehicles, num_goods)
 
     # Replace with the function call
-    num_customers, num_vehicles, num_goods, time_windows = get_user_input_set()
+    num_customers, num_vehicles, num_goods, time_windows, start_location, customer_locations = get_user_input_set()
 
     # Rest of your code remains unchanged
     solve_vehicle_routing_problem(num_customers, num_vehicles, num_goods)

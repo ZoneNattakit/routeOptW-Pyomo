@@ -20,9 +20,10 @@
 - find clone git to other git (find out)
 
 
-- test mix folium > in process (get position from user)
+- test mix folium > in process (get position from user) !change service
 - change it to function > in process 
 
+- all cars at least 60 (80 use cars? ) !!!! > formula calculate
 
 
 
